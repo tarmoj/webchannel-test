@@ -28,12 +28,14 @@
       // Event handler for demonstration
       function on_mouse_click(ev) {
             console.log("Mouse clicked");
-			csound.scoreEvent("i 1 0 1") ;
+            if (typeof csound !== 'undefined') {
+              csound.scoreEvent("i 1 0 1") ;
+            }
       }
       
       function newChannelValue(channel, value) {
         console.log("Channel "+channel+" value: "+ value);
-		if (typeof widget !== 'undefined') {
+                if (typeof csound !== 'undefined') {
 		  csound.setChannel(channel, value) ;
 		}
       }

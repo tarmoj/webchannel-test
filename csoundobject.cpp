@@ -26,7 +26,8 @@
 
 CsoundObject::CsoundObject(QObject *parent) : QObject(parent)
 {
-	stopNow = false;
+    cs = new Csound();
+    stopNow = false;
 
 }
 
