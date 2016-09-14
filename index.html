@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script type="text/javascript">
+
+     
+	  var csound ;
+
+      // Initialise web page
+      function initialize() {	
+	initialize_qt() ;
+        
+      }
+
+      // Initialise connection to QT C++
+      function initialize_qt() {
+		if (typeof qt != 'undefined') new QWebChannel(qt.webChannelTransport, function(channel) {
+			csound = channel.objects.csound;
+		} );
+      }
+
+      // function, can be called from C++ or from Javascript
+      function jsFunction(arg) {
+			console.log("Function called with argument ",arg);
+      }
+
+      // Event handler for demonstration
+      function on_mouse_click(ev) {
+            console.log("Mouse clicked");
+			csound.scoreEvent("i 1 0 1") ;
+      }
+      
+      function newChannelValue(channel, value) {
+        console.log("Channel "+channel+" value: "+ value);
+		if (typeof widget !== 'undefined') {
+		  csound.setChannel(channel, value) ;
+		}
+      }
+
+    </script>
+  </head>
+
+  <body onload="initialize()" bgcolor="lightgrey">
+   HTML5<->Csound test<br> 
+   <br>
+   <button id="button" onclick="on_mouse_click();" >Event</button>
+   <input type="range" id="slider" oninput='newChannelValue("test",this.value)'></input>
+   <br>
+	<label id="label">x</label>
+   <br>
+  </body>
+
+</html>
+
