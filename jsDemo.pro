@@ -7,6 +7,8 @@
 QT       += core gui
 QT       += network webenginewidgets webchannel
 
+CONFIG += c++11 # for R -multiline strin
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = jsDemo
