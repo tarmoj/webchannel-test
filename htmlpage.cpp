@@ -9,16 +9,16 @@ HtmlPage::HtmlPage(QWidget *parent) :
 
 	// Start Csound
 	cs = new CsoundObject();
-	QThread * csoundThread = new QThread();
-	cs->moveToThread(csoundThread);
+	//QThread * csoundThread = new QThread();
+	//cs->moveToThread(csoundThread);
 
-	QObject::connect(csoundThread, &QThread::finished, cs, &CsoundObject::deleteLater);
-	QObject::connect(csoundThread, &QThread::finished, csoundThread, &QThread::deleteLater);
-	QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, cs, &CsoundObject::stop);
-	QObject::connect(csoundThread, &QThread::started, cs, &CsoundObject::play);
+//	QObject::connect(csoundThread, &QThread::finished, cs, &CsoundObject::deleteLater);
+//	QObject::connect(csoundThread, &QThread::finished, csoundThread, &QThread::deleteLater);
+//	QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, cs, &CsoundObject::stop);
+//	QObject::connect(csoundThread, &QThread::started, cs, &CsoundObject::play);
 
 	//csoundThread->start();
-
+	cs->play();
 	// Set up the communications channel
 	this->page()->setWebChannel(&channel) ;
 	//channel.registerObject("widget", this) ;
