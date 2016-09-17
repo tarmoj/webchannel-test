@@ -1,22 +1,27 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QThread>
+#include <QWebEngineView>
 
-//
-// This program has a widget with its own class (HtmlPage) based on QWebEngine
-// The HtmlPage calls up a single html file, which contains JavaScript
-//
-// The Javascript has a handler which places a large dot when the cursor is clicked
-// The Javascript then calls (asynchronously) a C++ function
-// The C++ function emits a message to the mainwindow to update the X and Y coordinates on the form
-// The C++ function then calls (asynchronously) the Javascript to place a small dot at the same X and Y coordinates
-//
 
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mainWindow)
 {
     ui->setupUi(this);
+
+    QWebEngineView view;
+    view.setUrl(QUrl("qrc:/index.html"));
+    view.resize(1024, 750);
+    view.show();
+
+
+    cs = new CsoundWrapper();
+    view.page()->setWebChannel(&channel);
+    //this->page()->setWebChannel(&channel) ;
+    channel.registerObject("csound", cs) ;
+
+    // Set the page content
+    //setUrl(QUrl("qrc:/index.html")) ;
 }
 
 mainWindow::~mainWindow()
@@ -27,5 +32,15 @@ mainWindow::~mainWindow()
 
 void mainWindow::on_pushButton_clicked()
 {
-	ui->widgetHtmlPage->value2js("value",99.99);
+    ui->widgetHtmlPage->value2js("value",qrand()%100);
+}
+
+void mainWindow::on_playButton_clicked()
+{
+    cs->play("test.csd");
+}
+
+void mainWindow::on_stopButton_clicked()
+{
+    cs->stop();
 }

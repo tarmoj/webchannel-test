@@ -1,25 +1,10 @@
 #include "htmlpage.h"
-#include <QThread>
-#include <QApplication>
 
 
 HtmlPage::HtmlPage(QWidget *parent) :
    QWebEngineView(parent)
 {
 
-	// Start Csound
-//	cs = new CsoundObject();
-//    QThread * csoundThread = new QThread();
-//    cs->moveToThread(csoundThread);
-
-//    QObject::connect(csoundThread, &QThread::finished, cs, &CsoundObject::deleteLater);
-//    QObject::connect(csoundThread, &QThread::finished, csoundThread, &QThread::deleteLater);
-//    QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, cs, &CsoundObject::stop);
-//    QObject::connect(csoundThread, &QThread::started, cs, &CsoundObject::play);
-
-//    csoundThread->start();
-    //cs->play();
-	// Set up the communications channel
 
     cs = new CsoundWrapper();
 	this->page()->setWebChannel(&channel) ;
@@ -35,23 +20,6 @@ HtmlPage::~HtmlPage()
 {
 }
 
-void HtmlPage::scoreEvent(QString event)
-{
-    qDebug()<<"HtmlPage setChannel";
-    cs->scoreEvent(event);
-}
-
-void HtmlPage::setChannel(QString channel, double value)
-{
-    qDebug()<<"HtmlPage setChannel";
-    cs->setChannel(channel, value);
-}
-
-void HtmlPage::event(QString eventString)
-{
-	qDebug()<<"Call in C++ "<<eventString;
-
-}
 
 void HtmlPage::value2js(QString channel, double value)
 {
@@ -59,9 +27,5 @@ void HtmlPage::value2js(QString channel, double value)
 	page()->runJavaScript(command) ;
 }
 
-//void HtmlPage::setChannel(QString channel, double value)
-//{
-//	qDebug()<<"Channel"<<channel<<" value: "<<value;
 
-//}
 

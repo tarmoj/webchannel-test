@@ -1,7 +1,7 @@
 #include "csoundwrapper.h"
 #include <QThread>
 #include <QApplication>
-
+#include <QDebug>
 
 CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
 {
@@ -27,7 +27,8 @@ void CsoundWrapper::play(QString csd)
 
 void CsoundWrapper::setChannel(QString channel, double value)
 {
-
+    qDebug()<<"CsoundWrapper channel: "<<channel << " value: "<<value;
+    cs->SetChannel(channel.toLocal8Bit(), value); // BAD! -  access object from other thread! but leave it for now...
 }
 
 double CsoundWrapper::getChannel(QString channel)
@@ -42,6 +43,7 @@ void CsoundWrapper::stop()
 
 void CsoundWrapper::scoreEvent(QString event)
 {
-
+    qDebug()<<"CsoundWrapper New event: "<<event;
+    cs->InputMessage(event.toLocal8Bit());
 }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>465</width>
-    <height>218</height>
+    <height>384</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
       <x>0</x>
       <y>0</y>
       <width>461</width>
-      <height>281</height>
+      <height>288</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -60,38 +60,18 @@
         <number>6</number>
        </property>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QPushButton" name="playButton">
          <property name="text">
-          <string>X,Y: </string>
+          <string>Play</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="labelX">
+        <widget class="QPushButton" name="stopButton">
          <property name="text">
-          <string>0</string>
+          <string>Stop</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labelY">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </item>
@@ -104,6 +84,9 @@
      </item>
      <item>
       <widget class="HtmlPage" name="widgetHtmlPage" native="true">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -127,7 +110,7 @@
      <x>0</x>
      <y>0</y>
      <width>465</width>
-     <height>34</height>
+     <height>35</height>
     </rect>
    </property>
   </widget>

@@ -3,6 +3,12 @@
 
 #include <QMainWindow>
 
+#include <QtWebEngineWidgets>
+#include <QtWebChannel/QtWebChannel>
+
+#include "csoundwrapper.h"
+
+
 
 namespace Ui {
 class mainWindow;
@@ -21,8 +27,14 @@ private slots:
 
 	void on_pushButton_clicked();
 
+    void on_playButton_clicked();
+
+    void on_stopButton_clicked();
+
 private:
     Ui::mainWindow *ui;
+    CsoundWrapper * cs;
+    QWebChannel channel ;            // Channel for C++ to Javascript comms
 };
 
 #endif // MAINWINDOW_H

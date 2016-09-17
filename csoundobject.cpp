@@ -19,7 +19,7 @@ void CsoundObject::play() {
 
     int ret = cs->Compile(csdFile.toLocal8Bit().data()); //cs->CompileOrc(orc.toLocal8Bit());
 	if (!ret) {
-		cs->Start();
+        //cs->Start();
 
 		while (cs->PerformKsmps()==0 && !stopNow) {
 			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
