@@ -14,20 +14,22 @@ CsoundObject::CsoundObject(QObject *parent) : QObject(parent)
 
 void CsoundObject::play() {
 
-	cs->SetOption("-odac");
-	cs->SetOption("-d");
+    //cs->SetOption("-odac");
+    //cs->SetOption("-d");
 
     int ret = cs->Compile(csdFile.toLocal8Bit().data()); //cs->CompileOrc(orc.toLocal8Bit());
 	if (!ret) {
         //cs->Start();
 
 		while (cs->PerformKsmps()==0 && !stopNow) {
-			QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
+            QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
 		}
 
 	}
 	qDebug()<<"Stopping csound";
 	cs->Stop();
+    cs->Cleanup();
+    cs->Reset();
 	stopNow = false;
 
 }
@@ -43,7 +45,8 @@ void CsoundObject::setChannel(QString channel, double value) {
 
 double CsoundObject::getChannel(QString channel)
 {
-	double value = cs->GetChannel("value" );
+    double value = cs->GetChannel(channel.toLocal8Bit());
+    emit newChannelValue(channel, value);
 	qDebug()<<"Value from "<<channel<<" :"<< value;
 	return value;
 }

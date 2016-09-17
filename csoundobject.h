@@ -18,6 +18,7 @@ public:
     void setCsd(QString csd) {csdFile = csd;}
 
 signals:
+    void newChannelValue(QString channel, double value);
 
 public slots:
     void setChannel(QString channel, double value);

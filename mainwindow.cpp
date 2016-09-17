@@ -9,16 +9,18 @@ mainWindow::mainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QWebEngineView view;
-    view.setUrl(QUrl("qrc:/index.html"));
-    view.resize(1024, 750);
-    view.show();
+    QWebEngineView * view = new QWebEngineView();
+    view->setUrl(QUrl("qrc:/index.html"));
+    view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->verticalLayout->addWidget(view);
+    //view->resize(400, 500);
+
 
 
     cs = new CsoundWrapper();
-    view.page()->setWebChannel(&channel);
-    //this->page()->setWebChannel(&channel) ;
+    view->page()->setWebChannel(&channel);
     channel.registerObject("csound", cs) ;
+    cs->getChannel("testChannel");
 
     // Set the page content
     //setUrl(QUrl("qrc:/index.html")) ;
@@ -32,7 +34,9 @@ mainWindow::~mainWindow()
 
 void mainWindow::on_pushButton_clicked()
 {
-    ui->widgetHtmlPage->value2js("value",qrand()%100);
+    qDebug()<<"request channel value";
+    cs->getChannel("testValue");
+    //ui->widgetHtmlPage->value2js("value",qrand()%100);
 }
 
 void mainWindow::on_playButton_clicked()

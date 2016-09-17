@@ -16,6 +16,9 @@ public:
     Q_INVOKABLE void stop();
     Q_INVOKABLE void scoreEvent(QString event);
 signals:
+    void newScoreEvent(QString event);
+    void newChannelValue(QString channel, double value);
+    void requestChannelValue(QString channel);
 
 public slots:
 
