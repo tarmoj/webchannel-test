@@ -5,11 +5,8 @@
 
 #include <QObject>
 
-#ifdef Q_OS_ANDROID
-	#include "AndroidCsound.hpp"
-#else
-	#include <csound.hpp>
-#endif
+#include <csound.hpp>
+
 
 //#include <csound.h>
 class CsoundObject : public QObject
@@ -17,24 +14,22 @@ class CsoundObject : public QObject
 	Q_OBJECT
 public:
 	explicit CsoundObject(QObject *parent = 0);
+    Csound *getCsound() {return cs;}
+    void setCsd(QString csd) {csdFile = csd;}
 
 signals:
 
 public slots:
-	Q_INVOKABLE void setChannel(QString channel, double value); // do I need Q_INVOKABLE, if it is a slot...
-	Q_INVOKABLE double getChannel(QString channel);
-	Q_INVOKABLE void play();
-	Q_INVOKABLE void stop();
-	Q_INVOKABLE void scoreEvent(QString event);
+    void setChannel(QString channel, double value);
+    double getChannel(QString channel);
+    void play();
+    void stop();
+    void scoreEvent(QString event);
 
 private:
-#ifdef Q_OS_ANDROID
-	AndroidCsound  *cs ;
-#else
 	Csound  *cs;
-#endif
-	QString csd; // resolve later
 	bool stopNow;
+    QString csdFile;
 };
 
 #endif // CSOUNDOBJECT_H

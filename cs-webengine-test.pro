@@ -18,11 +18,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     htmlpage.cpp \
-    csoundobject.cpp
+    csoundobject.cpp \
+    csoundwrapper.cpp
 
 HEADERS  += mainwindow.h \
     htmlpage.h \
-    csoundobject.h
+    csoundobject.h \
+    csoundwrapper.h
 
 FORMS    += mainwindow.ui
 

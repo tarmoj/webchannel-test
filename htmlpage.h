@@ -6,7 +6,7 @@
 #include <QtWebEngineWidgets>
 #include <QtWebChannel/QtWebChannel>
 
-#include "csoundobject.h"
+#include "csoundwrapper.h"
 
 class HtmlPage : public QWebEngineView
 {
@@ -14,7 +14,7 @@ class HtmlPage : public QWebEngineView
 	//Q_PROPERTY(int number READ getNumber WRITE setNumber NOTIFY numChanged)
 private:
     QWebChannel channel ;            // Channel for C++ to Javascript comms
-    CsoundObject * cs;
+    CsoundWrapper * cs;
 
 
 signals:
