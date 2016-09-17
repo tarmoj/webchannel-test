@@ -7,11 +7,11 @@
 QT       += core gui
 QT       += network webenginewidgets webchannel
 
-CONFIG += c++11 # for R -multiline strin
+CONFIG += c++11 # for R -multiline strings before Qt 5.6
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = jsDemo
+TARGET = csWebengineTest
 TEMPLATE = app
 
 
@@ -30,6 +30,8 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES +=
+
+# Csound headers and libs: 
 
 linux: INCLUDEPATH += /usr/local/include/csound
 
