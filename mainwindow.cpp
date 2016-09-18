@@ -80,6 +80,7 @@ void mainWindow::loadCsd()  {
         qDebug()<< "Could not open "<<csd;
     }
     ui->csdTextEdit->document()->setPlainText(csdFile.readAll() );
+    ui->csdTextEdit->moveCursor(QTextCursor::Start);
     qDebug()<<"HTML text: " << getHtmlText();
     updateHtml();
 }
@@ -88,10 +89,10 @@ QString mainWindow::getHtmlText()
 {
     QString htmlText;
     QString text = ui->csdTextEdit->document()->toPlainText();
-    if (text.contains("CsHtml5")) {
-        int startIndex = text.indexOf("<CsHtml5>");
-        int endIndex = text.indexOf("</CsHtml5>");
-        htmlText = text.mid(startIndex+9, endIndex-startIndex-9);//.simplified();
+    if (text.contains("<html")) {
+        int startIndex = text.indexOf("<html");
+        int endIndex = text.indexOf("</html");
+        htmlText = text.mid(startIndex, endIndex-startIndex+7);// + 7 -  </html> .simplified();
     }
 
     return htmlText;
