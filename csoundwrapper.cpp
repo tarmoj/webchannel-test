@@ -3,10 +3,11 @@
 #include <QApplication>
 #include <QDebug>
 
+
 CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
 {
     csObject = new CsoundObject();
-    //cs = csObject->getCsound();
+    cs = csObject->getCsound();
 
     // Start Csound in separate thread
     QThread * csoundThread = new QThread();
@@ -18,29 +19,25 @@ CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
     //QObject::connect(csoundThread, &QThread::started, cs, &CsoundObject::play);
     csoundThread->start();
 
-    QObject::connect(this, SIGNAL(newScoreEvent(QString)), csObject, SLOT(scoreEvent(QString)));
-    QObject::connect(this, SIGNAL(newChannelValue(QString,double)), csObject, SLOT(setChannel(QString,double)));
-    QObject::connect(this, SIGNAL(requestChannelValue(QString)), csObject, SLOT(getChannel(QString)));
+    QObject::connect(csObject, SIGNAL(statusChanged(int)), this, SIGNAL(stateChanged(int)));
+
 }
 
 void CsoundWrapper::play(QString csd)
 {
+
     csObject->setCsd(csd);
     csObject->play();
 }
 
 void CsoundWrapper::setChannel(QString channel, double value)
 {
-    qDebug()<<"CsoundWrapper channel: "<<channel << " value: "<<value;
-    emit newChannelValue(channel, value);
+    cs->SetChannel(channel.toLocal8Bit(),value);
 }
 
 double CsoundWrapper::getChannel(QString channel)
 {
-    qDebug()<< "Wrapper request";
-    emit requestChannelValue(channel);
-
-
+    return cs->GetChannel(channel.toLocal8Bit());
 }
 
 void CsoundWrapper::stop()
@@ -51,7 +48,9 @@ void CsoundWrapper::stop()
 void CsoundWrapper::scoreEvent(QString event)
 {
     qDebug()<<"CsoundWrapper New event: "<<event;
-    emit newScoreEvent(event);
+    cs->InputMessage(event.toLocal8Bit());
 
 }
+
+
 

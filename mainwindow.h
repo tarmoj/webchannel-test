@@ -5,6 +5,7 @@
 
 #include <QtWebEngineWidgets>
 #include <QtWebChannel/QtWebChannel>
+#include <QWebEngineView>
 
 #include "csoundwrapper.h"
 
@@ -22,6 +23,9 @@ public:
     explicit mainWindow(QWidget *parent = 0);
     ~mainWindow();
 
+public slots:
+    void stateChanged(int state);
+
 private slots:
 	//void cursorMoved(int x, int y) ;
 
@@ -33,8 +37,10 @@ private slots:
 
 private:
     Ui::mainWindow *ui;
-    CsoundWrapper * cs;
+    CsoundWrapper cs; // NB! must be in stack, ie not pointer...
     QWebChannel channel ;            // Channel for C++ to Javascript comms
+    QWebEngineView * view;
+
 };
 
 #endif // MAINWINDOW_H

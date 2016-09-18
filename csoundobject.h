@@ -8,6 +8,7 @@
 #include <csound.hpp>
 
 
+
 //#include <csound.h>
 class CsoundObject : public QObject
 {
@@ -17,15 +18,18 @@ public:
     Csound *getCsound() {return cs;}
     void setCsd(QString csd) {csdFile = csd;}
 
+    enum States {Playing, Stopped, Error};
+
 signals:
-    void newChannelValue(QString channel, double value);
+    void statusChanged(int status);
 
 public slots:
-    void setChannel(QString channel, double value);
-    double getChannel(QString channel);
+//    void setChannel(QString channel, double value);
+//    double getChannel(QString channel);
+//    void scoreEvent(QString event);
     void play();
     void stop();
-    void scoreEvent(QString event);
+
 
 private:
 	Csound  *cs;
