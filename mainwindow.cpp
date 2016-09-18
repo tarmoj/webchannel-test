@@ -14,18 +14,18 @@ mainWindow::mainWindow(QWidget *parent) :
     QLabel * label = new QLabel("UUS");
     ui->verticalLayout->addWidget(label);
 
-    view = new QWebEngineView();
-    view->setUrl(QUrl("qrc:/index.html"));
-    view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //view->resize(400, 500);
+    htmlView = new QWebEngineView();
+    htmlView->setUrl(QUrl("qrc:/index.html"));
+    htmlView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    //htmlView->resize(400, 500);
 
-    ui->htmlLayout->addWidget(view);
+    ui->htmlLayout->addWidget(htmlView);
 
 
     csd = ":/test.csd";
-    loadFile();
+    loadCsd();
     //cs = new CsoundWrapper();
-    view->page()->setWebChannel(&channel);
+    htmlView->page()->setWebChannel(&channel);
     channel.registerObject("csound", &cs) ;
 
     QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
@@ -41,7 +41,7 @@ void mainWindow::stateChanged(int state)
     QStringList states = QStringList()<< "PLAYING" << "STOPPED"  <<"ERROR";
     qDebug()<<" new state: " << states[state];
     QString command = QString("document.getElementById( \"label\").innerHTML = \"%1\" ").arg(states[state]); // C++ to JavasCript
-    view->page()->runJavaScript(command) ;
+    htmlView->page()->runJavaScript(command) ;
 }
 
 
@@ -51,7 +51,7 @@ void mainWindow::stateChanged(int state)
 //    double value = cs.getChannel("testChannel");
 //    qDebug()<<"request channel value" << value;
 //    QString command = QString("document.getElementById( \"label\").innerHTML = \"%1\" ").arg(value); //QString("newChannelValue(%1,%2,%3,'%4');").arg(sX).arg(sY).arg(sz).arg(colour) ;
-//    view->page()->runJavaScript(command) ;
+//    htmlView->page()->runJavaScript(command) ;
 //}
 
 void mainWindow::on_playButton_clicked()
@@ -66,25 +66,54 @@ void mainWindow::on_stopButton_clicked()
 
 void mainWindow::on_loadButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    "/home/tarmo/tarmo/csound",
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "",
                                                     tr("Csound files (*.csd)"));
     if (fileName.endsWith(".csd")) {
         csd = fileName;
-        loadFile();
+        loadCsd();
     }
 }
 
-void mainWindow::loadFile()  {
+void mainWindow::loadCsd()  {
     QFile csdFile(csd);
     if (!csdFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
         qDebug()<< "Could not open "<<csd;
     }
     ui->csdTextEdit->document()->setPlainText(csdFile.readAll() );
+    qDebug()<<"HTML text: " << getHtmlText();
+    updateHtml();
+}
+
+QString mainWindow::getHtmlText()
+{
+    QString htmlText;
+    QString text = ui->csdTextEdit->document()->toPlainText();
+    if (text.contains("CsHtml5")) {
+        int startIndex = text.indexOf("<CsHtml5>");
+        int endIndex = text.indexOf("</CsHtml5>");
+        htmlText = text.mid(startIndex+9, endIndex-startIndex-9);//.simplified();
+    }
+
+    return htmlText;
+}
+
+void mainWindow::updateHtml()
+{
+    QString htmlText = getHtmlText();
+    if (htmlText.isEmpty()) {
+        qDebug()<< "<CsHtml5> not found";
+        return;
+    }
+
+    if (tempHtml.open()) {
+        tempHtml.write(htmlText.toLocal8Bit());
+        tempHtml.close();
+        htmlView->setUrl(QUrl::fromLocalFile(tempHtml.fileName()));
+    }
 
 }
 
 void mainWindow::on_updateButton_clicked()
 {
-
+    updateHtml();
 }

@@ -7,6 +7,8 @@
 #include <QtWebChannel/QtWebChannel>
 #include <QWebEngineView>
 
+#include <QTemporaryFile>
+
 #include "csoundwrapper.h"
 
 
@@ -23,29 +25,26 @@ public:
     explicit mainWindow(QWidget *parent = 0);
     ~mainWindow();
 
-    void loadFile();
+    void loadCsd();
+    QString getHtmlText();
+    void updateHtml();
+
 public slots:
     void stateChanged(int state);
 
 private slots:
-	//void cursorMoved(int x, int y) ;
-
-//	void on_pushButton_clicked();
-
     void on_playButton_clicked();
-
     void on_stopButton_clicked();
-
     void on_loadButton_clicked();
-
     void on_updateButton_clicked();
 
 private:
     Ui::mainWindow *ui;
     CsoundWrapper cs; // NB! must be in stack, ie not pointer...
     QWebChannel channel ;            // Channel for C++ to Javascript comms
-    QWebEngineView * view;
+    QWebEngineView * htmlView;
     QString csd;
+    QTemporaryFile  tempHtml;
 
 };
 

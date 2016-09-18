@@ -16,15 +16,13 @@
 
 <style type="text/css">
 
-button.bigbutton { width: 500px; height : 300px; } 
+button.bigbutton { width: 50px; height : 30px; } 
 
 </style>
 
 </head>
 
 <body>
-
-</body>
 
 <h1> My html</h1>
 
