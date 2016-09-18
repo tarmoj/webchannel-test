@@ -12,14 +12,15 @@ mainWindow::mainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QLabel * label = new QLabel("UUS");
-
+    ui->verticalLayout->addWidget(label);
 
     view = new QWebEngineView();
-    view->setUrl(QUrl(":/index.html"));
-    //view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    ui->verticalLayout->addWidget(view);
+    view->setUrl(QUrl("qrc:/index.html"));
+    view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     //view->resize(400, 500);
-    ui->verticalLayout->addWidget(label);
+
+    ui->htmlLayout->addWidget(view);
+
 
     csd = ":/test.csd";
     loadFile();
