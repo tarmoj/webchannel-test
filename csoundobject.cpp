@@ -6,7 +6,7 @@
 #include <QFile>
 #include <QTemporaryFile>
 
-CsoundObject::CsoundObject(QObject *parent) : QObject(parent)
+CsoundObject::CsoundObject()
 {
     cs = new Csound();
     stopNow = false;
@@ -14,7 +14,7 @@ CsoundObject::CsoundObject(QObject *parent) : QObject(parent)
 
 }
 
-void CsoundObject::play() {
+void CsoundObject::run() {
 
     //cs->SetOption("-odac");
     //cs->SetOption("-d");
@@ -32,14 +32,13 @@ void CsoundObject::play() {
 	if (!ret) {
         emit statusChanged(Playing);
 		while (cs->PerformKsmps()==0 && !stopNow) {
-            QCoreApplication::processEvents(); // probably bad solution but works. otherwise other slots will never be calles
 		}
 
     } else {
         emit statusChanged(Error);
         cs->Cleanup();
         cs->Reset();
-        return;
+        quit(); // finish the trhead
     }
 
 	qDebug()<<"Stopping csound";
@@ -48,30 +47,11 @@ void CsoundObject::play() {
     cs->Reset();
 	stopNow = false;
     emit statusChanged(Stopped);
+    quit();
 
 }
 
 void CsoundObject::stop() {
 	stopNow = true;
 }
-/*
-void CsoundObject::setChannel(QString channel, double value) {
-	qDebug()<<"channel: "<<channel << " value: "<<value;
-	cs->SetChannel(channel.toLocal8Bit(), value);
-}
 
-double CsoundObject::getChannel(QString channel)
-{
-    double value = cs->GetChannel(channel.toLocal8Bit());
-    emit newChannelValue(channel, value);
-	qDebug()<<"Value from "<<channel<<" :"<< value;
-	return value;
-}
-
-
-void CsoundObject::scoreEvent(QString event)
-{
-	qDebug()<<"New event: "<<event;
-	cs->InputMessage(event.toLocal8Bit());
-}
-*/

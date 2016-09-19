@@ -4,20 +4,21 @@
 #define CSOUNDOBJECT_H
 
 #include <QObject>
+#include <QThread>
 
 #include <csound.hpp>
 
 
 
 //#include <csound.h>
-class CsoundObject : public QObject
+class CsoundObject : public QThread
 {
 	Q_OBJECT
 public:
-	explicit CsoundObject(QObject *parent = 0);
+    explicit CsoundObject();
     Csound *getCsound() {return cs;}
     void setCsd(QString csd) {csdFile = csd;}
-
+    void run();
     enum States {Playing, Stopped, Error};
 
 signals:
@@ -27,7 +28,7 @@ public slots:
 //    void setChannel(QString channel, double value);
 //    double getChannel(QString channel);
 //    void scoreEvent(QString event);
-    void play();
+    //void play();
     void stop();
 
 

@@ -23,10 +23,12 @@ function scoreEvent(event) {
     }
 }
 
-function setControlChannel(channel, value) {
-    console.log("Channel "+channel+" value: "+ value);
-    if (typeof csound !== 'undefined') {
-        csound.setChannel(channel, value) ;
-    }
-}
+
+csound.getControlChannel(channel, function(returnValue) {
+        // This callback will be invoked when myMethod has a return value. Keep in mind that
+        // the communication is asynchronous, hence the need for this callback.
+        console.log(returnValue);
+        document.getElementById("getchannel").innerHTML = returnValue; //for testing
+        
+});
 
