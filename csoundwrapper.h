@@ -11,10 +11,11 @@ public:
     explicit CsoundWrapper(QObject *parent = 0);
 
     Q_INVOKABLE void play(QString csd);
-    Q_INVOKABLE void setChannel(QString channel, double value); // do I need Q_INVOKABLE, if it is a slot...
-    Q_INVOKABLE double getChannel(QString channel);
+    Q_INVOKABLE void setControlChannel(QString channel, double value); // do I need Q_INVOKABLE, if it is a slot...
+    Q_INVOKABLE double getControlChannel(QString channel);
     Q_INVOKABLE void stop();
-    Q_INVOKABLE void scoreEvent(QString event);
+    Q_INVOKABLE void readScore(QString score);
+
 signals:
     void stateChanged(int state);
 public slots:

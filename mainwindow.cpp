@@ -44,16 +44,6 @@ void mainWindow::stateChanged(int state)
     htmlView->page()->runJavaScript(command) ;
 }
 
-
-//void mainWindow::on_pushButton_clicked()
-//{
-
-//    double value = cs.getChannel("testChannel");
-//    qDebug()<<"request channel value" << value;
-//    QString command = QString("document.getElementById( \"label\").innerHTML = \"%1\" ").arg(value); //QString("newChannelValue(%1,%2,%3,'%4');").arg(sX).arg(sY).arg(sz).arg(colour) ;
-//    htmlView->page()->runJavaScript(command) ;
-//}
-
 void mainWindow::on_playButton_clicked()
 {
     cs.play(csd);
@@ -92,7 +82,7 @@ QString mainWindow::getHtmlText()
     if (text.contains("<html")) {
         int startIndex = text.indexOf("<html");
         int endIndex = text.indexOf("</html");
-        htmlText = text.mid(startIndex, endIndex-startIndex+7);// + 7 -  </html> .simplified();
+        htmlText = text.mid(startIndex, endIndex-startIndex+7);// + 7 is for  </html>    }
     }
 
     return htmlText;

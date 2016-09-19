@@ -9,30 +9,25 @@
 <CsHtml5>
 
 <!DOCTYPE html>
-
 <html>
+  <head>
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script type="text/javascript" src="qrc:///qtcsound.js"></script>
+    </head>
 
-<head>
-
-<style type="text/css">
-
-button.bigbutton { width: 50px; height : 30px; } 
-
-</style>
-
-</head>
-
-<body>
-
-<h1> My html</h1>
-
-<button class="bigbutton" onclick='csound.readScore("i 1 0 1 1")'">NEXT</button><br><br><br>
-
-<button class="bigbutton" onclick='csound.readScore("i 1 0 0.1 -1")'>Previous</button>
-
-</body>
+  <body bgcolor="lightgrey">
+   HTML5<->Csound test<br> 
+   <br>
+   <button id="button" onclick='csound.readScore("i 1 0 1")' >Event</button>
+   <input type="range" id="slider" oninput='csound.setControlChannel("testChannel",this.value/100.0);'></input>
+   <br>
+	Csound status: <label id="label">x</label><br>
+   <br>
+  </body>
 
 </html>
+
+
 
 </CsHtml5>
 
@@ -49,19 +44,16 @@ nchnls = 2
 ksmps = 32
 
 chn_k "testChannel", 3
-chnset 0.5, "testChannel"
+chnset 0.5, "testChannel" ; to test chnget in the host
 
 
 
-instr 1 ; send 1 for NEXT and  -1 for previous
+instr 1 
 
-  ivalue = p4
-
-  print ivalue
   ifreq= 200+chnget:i("testChannel")*500	
+  print ifreq
   out poscil(0.1,ifreq)
 
-  ;OSCsend 1, "192.168.1.201",7077,"/android","i", ivalue
 
 endin
 
@@ -74,7 +66,7 @@ endin
 </CsInstruments>
 
 <CsScore>
-i 1 0 0.5
+i 1 0 0.1 ; to hear if Csound is loaded
 f 0 3600
 
 
@@ -83,21 +75,3 @@ f 0 3600
 </CsoundSynthesizer>
 
 
-
-<bsbPanel>
- <label>Widgets</label>
- <objectName/>
- <x>100</x>
- <y>100</y>
- <width>320</width>
- <height>240</height>
- <visible>true</visible>
- <uuid/>
- <bgcolor mode="nobackground">
-  <r>255</r>
-  <g>255</g>
-  <b>255</b>
- </bgcolor>
-</bsbPanel>
-<bsbPresets>
-</bsbPresets>

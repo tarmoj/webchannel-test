@@ -30,12 +30,13 @@ void CsoundWrapper::play(QString csd)
     csObject->play();
 }
 
-void CsoundWrapper::setChannel(QString channel, double value)
+void CsoundWrapper::setControlChannel(QString channel, double value)
 {
+    qDebug()<<"CsoundWrapper::setControlChannel  channel: "<< channel << "value: "<<value;
     cs->SetChannel(channel.toLocal8Bit(),value);
 }
 
-double CsoundWrapper::getChannel(QString channel)
+double CsoundWrapper::getControlChannel(QString channel)
 {
     return cs->GetChannel(channel.toLocal8Bit());
 }
@@ -45,12 +46,13 @@ void CsoundWrapper::stop()
     csObject->stop();
 }
 
-void CsoundWrapper::scoreEvent(QString event)
+void CsoundWrapper::readScore(QString score)
 {
-    qDebug()<<"CsoundWrapper New event: "<<event;
-    cs->InputMessage(event.toLocal8Bit());
+    qDebug()<<"CsoundWrapper::readScore New event: "<<score;
+    cs->ReadScore(score.toLocal8Bit());
 
 }
+
 
 
 

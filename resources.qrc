@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>index.html</file>
         <file>test.csd</file>
+        <file>qtcsound.js</file>
     </qresource>
 </RCC>
