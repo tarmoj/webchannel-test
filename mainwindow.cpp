@@ -41,7 +41,8 @@ void mainWindow::stateChanged(int state)
     QStringList states = QStringList()<< "PLAYING" << "STOPPED"  <<"ERROR";
     qDebug()<<" new state: " << states[state];
     QString command = QString("document.getElementById( \"label\").innerHTML = \"%1\" ").arg(states[state]); // C++ to JavasCript
-    htmlView->page()->runJavaScript(command) ;
+    htmlView->page()->runJavaScript(command) ; // access and change the html page via javascript
+    // the js page could also handle signals from the attachedd C++ object see http://doc.qt.io/qt-5/qtwebchannel-javascript.html
 }
 
 void mainWindow::on_playButton_clicked()
@@ -71,7 +72,7 @@ void mainWindow::loadCsd()  {
     }
     ui->csdTextEdit->document()->setPlainText(csdFile.readAll() );
     ui->csdTextEdit->moveCursor(QTextCursor::Start);
-    qDebug()<<"HTML text: " << getHtmlText();
+    //qDebug()<<"HTML text: " << getHtmlText();
     updateHtml();
 }
 
@@ -92,11 +93,20 @@ void mainWindow::updateHtml()
 {
     QString htmlText = getHtmlText();
     if (htmlText.isEmpty()) {
-        qDebug()<< "<CsHtml5> not found";
+        qDebug()<< "<html> tag not found";
         return;
     }
 
     if (tempHtml.open()) {
+        // add necessary lines to load qtwebchannel/qwebchannel.js and qtcsound.js
+        // TODO: take care if html includes <head ...something...>
+        QString replaceString = "<head> \
+                    <script type=\"text/javascript\" src=\"qrc:///qtwebchannel/qwebchannel.js\"> </script> \
+                    <script type=\"text/javascript\" src=\"qrc:///qtcsound.js\"></script> ";
+
+
+        htmlText = htmlText.replace("<head>", replaceString);
+        qDebug()<<"Replaced html: " <<htmlText;
         tempHtml.write(htmlText.toLocal8Bit());
         tempHtml.close();
         htmlView->setUrl(QUrl::fromLocalFile(tempHtml.fileName()));
@@ -108,3 +118,5 @@ void mainWindow::on_updateButton_clicked()
 {
     updateHtml();
 }
+
+// TODO: catch javascript console output. See http://doc.qt.io/qt-5/qwebenginepage.html#javaScriptConsoleMessage

@@ -11,9 +11,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
-    <script type="text/javascript" src="qrc:///qtcsound.js"></script>
-    </head>
+  </head>
 
   <body bgcolor="lightgrey">
    HTML5<->Csound test<br> 
