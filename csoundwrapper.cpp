@@ -32,6 +32,7 @@ double CsoundWrapper::getControlChannel(QString channel)
     double value = cs->GetChannel(channel.toLocal8Bit());
     qDebug()<<"CsoundWrapper::getControlChannel " << channel << " value: " << value;
     emit newChannelValue(channel, value);
+    lastChannelValue=value;
     return value;
 }
 

@@ -3,9 +3,11 @@
 
 
 var csound ;
-
+var currentChannel= null, currentValue = null;
 
 window.addEventListener('load', initialize_qt, false);
+
+
 
 // Initialise connection to QT C++
 function initialize_qt() {
@@ -14,19 +16,14 @@ function initialize_qt() {
                 csound = channel.objects.csound; // use something like  QWebchannel::registerObject("csound", &cs) ; in C++ where cs is the object handling Csound encessary methods
                 csound.test("INIT");
 
-//                csound.newChannelValue.connect( function(channelName, value) {
-//                            alert("New value! " + value);
-//                            csound.test("from newChannelValue"+value);
-//                 });
+                // seems that the signal connections should be connected here
 
-//                csound.getControlChannel("testChannel", function(value) {
-//                    // This callback will be invoked when myMethod has a return value. Keep in mind that
-//                    // the communication is asynchronous, hence the need for this callback.
-//                    console.log(value);
-//                    csound.test("from getControlChannel" );
-//                    alert("Got value: " + value.toString());
+                csound.newChannelValue.connect( function(channelName, value) { // a signal from csound getControlChanel
+                            currentChannel=channelName; currentValue=value;
+                            alert("New value! " + value);
+                            csound.test("from newChannelValue"+value);
 
-//            });
+                 });
 
         } );
 }
@@ -39,12 +36,63 @@ function scoreEvent(event) {
     }
 }
 
-var returnValue;
-function getChannel(channel){
-    csound.getControlChannel(channel, function(ret){alert("INNER"+ret);returnValue=ret});
-    return returnValue;
+
+function getChannel(channel){  // with promise
+    var channelValue;
+    var promise = new Promise(function(fulfill, reject) {
+
+            csound.getControlChannel(channel, function(ret) {
+                    //alert("INNER "+ret);
+                    fulfill(ret);
+                });
+        });
+    promise.then(function(value) {
+        alert("THEN "+value)
+        channelValue = value; // How on earth to get getChannel to return the value?
+    },  function(value) {
+            console.log('Error in getChannel');
+        }
+    );
 }
 
+
+function getChannel2(channel){
+     csound.getControlChannel(channel);
+//    csound.getControlChannel(channel, function(ret){
+//        currentChannel = channel;
+//        currentValue = ret; // the value is received correctyl here.
+//        alert("INNER"+currentValue);  // the value is received correctyl here.
+//    });
+
+    // wait until value is set
+    var start = new Date().getTime();
+    var timeOut = 1000; // TODO sr/ksmps*4 for any case
+    var now = start;
+    while (now < start + timeOut) {  // && currentValue===null
+         now = new Date().getTime();
+    }
+
+    alert("GOT VALUE"+currentValue); // does not work... sinse gets evaluated before async call returns
+    currentValue = null; currentChannel = null;
+    return currentValue;
+
+}
+
+function getChannel3(channel){
+    csound.getControlChannel(channel);
+    // wait until value is set
+
+    var start = new Date().getTime();
+    var timeOut = 1000; // TODO sr/ksmps*4 for any case
+    var now = start;
+    while (now < start + timeOut) {  // && currentValue===null
+         now = new Date().getTime();
+    }
+
+    var v = csound.lastChannelValue;
+    //alert("VALUE: "+v);
+    return v;
+}
 
 
 

@@ -19,9 +19,10 @@ public:
     Q_INVOKABLE void readScore(QString score);
     Q_INVOKABLE void test(QString message) {qDebug()<<"TEST "<<message;}
 
-    Q_INVOKABLE int getIntValue(QString channelName) {int value = qrand()%100; qDebug()<<"Int C++ value "<<value; return value;}
+//    Q_INVOKABLE int getIntValue(QString channelName) {int value = qrand()%100; qDebug()<<"Int C++ value "<<value; return value;}
 //    Q_PROPERTY(int intValue READ getIntValue(QString))
 
+     double lastChannelValue; // for testing
 
 signals:
     void stateChanged(int state);
