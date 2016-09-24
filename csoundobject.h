@@ -23,6 +23,7 @@ public:
 
 signals:
     void statusChanged(int status);
+    //void forwardChannelValue(QString channel, double value);
 
 public slots:
 //    void setChannel(QString channel, double value);

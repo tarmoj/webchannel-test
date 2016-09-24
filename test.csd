@@ -18,7 +18,7 @@
    <br>
    <button id="button" onclick='csound.readScore("i 1 0 1")' >Event</button>
    <input type="range" id="slider" oninput='csound.setControlChannel("testChannel",this.value/100.0); '></input><br>
-   Get channel from csound: <label id="getchannel"></label> <button onclick=' csound.getControlChannel("testChannel")' >Get</button>  < - does not work yet...
+   Get channel from csound: <label id="getchannel"></label> <button onclick='var v11; v11=getChannel("testChannel"); alert(v11); ' >Get</button>  < - does not work yet...
    <br>
 	Csound status: <label id="label">x</label><br>
    <br>

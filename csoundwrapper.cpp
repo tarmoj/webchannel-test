@@ -31,6 +31,7 @@ double CsoundWrapper::getControlChannel(QString channel)
 {
     double value = cs->GetChannel(channel.toLocal8Bit());
     qDebug()<<"CsoundWrapper::getControlChannel " << channel << " value: " << value;
+    emit newChannelValue(channel, value);
     return value;
 }
 
@@ -43,7 +44,6 @@ void CsoundWrapper::readScore(QString score)
 {
     qDebug()<<"CsoundWrapper::readScore New event: "<<score;
     cs->ReadScore(score.toLocal8Bit());
-
 }
 
 
