@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDebug>
 
+// See https://medium.com/@bluepnume/learn-about-promises-before-you-start-using-async-await-eb148164a9c8#.22714eqie.
 
 CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
 {
@@ -10,7 +11,6 @@ CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
     cs = csObject->getCsound();
     QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, csObject, &CsoundObject::stop);
     QObject::connect(csObject, SIGNAL(statusChanged(int)), this, SIGNAL(stateChanged(int)));
-
 }
 
 void CsoundWrapper::play(QString csd)
