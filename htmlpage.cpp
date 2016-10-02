@@ -4,16 +4,6 @@
 HtmlPage::HtmlPage(QWidget *parent) :
    QWebEngineView(parent)
 {
-
-
-//    cs = new CsoundWrapper();
-//	this->page()->setWebChannel(&channel) ;
-//    channel.registerObject("csound", cs) ;
-//    //channel.registerObject("csound", cs) ;
-
-//    // Set the page content
-//    setUrl(QUrl("qrc:/index.html")) ;
-
 }
 
 HtmlPage::~HtmlPage()

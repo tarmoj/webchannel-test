@@ -8,7 +8,6 @@ CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
 {
     csObject = new CsoundObject();
     cs = csObject->getCsound();
-
     QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, csObject, &CsoundObject::stop);
     QObject::connect(csObject, SIGNAL(statusChanged(int)), this, SIGNAL(stateChanged(int)));
 
@@ -31,8 +30,6 @@ double CsoundWrapper::getControlChannel(QString channel)
 {
     double value = cs->GetChannel(channel.toLocal8Bit());
     qDebug()<<"CsoundWrapper::getControlChannel " << channel << " value: " << value;
-    emit newChannelValue(channel, value);
-    lastChannelValue=value;
     return value;
 }
 
