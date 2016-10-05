@@ -11,22 +11,39 @@ mainWindow::mainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QLabel * label = new QLabel("UUS");
-    ui->verticalLayout->addWidget(label);
+//    QLabel * label = new QLabel("UUS");
+//    ui->verticalLayout->addWidget(label);
+#ifdef USE_WEBKIT
+	htmlView = new QWebView();
+#else
+	htmlView = new QWebEngineView();
+#endif
 
-    htmlView = new QWebEngineView();
-    htmlView->setUrl(QUrl("qrc:/index.html"));
-    htmlView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     //htmlView->resize(400, 500);
+	htmlView->setUrl(QUrl("qrc:/test.html"));
+	//? htmlView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     ui->htmlLayout->addWidget(htmlView);
 
 
     csd = ":/test.csd";
-    loadCsd();
-    //cs = new CsoundWrapper();
-    htmlView->page()->setWebChannel(&channel);
-    channel.registerObject("csound", &cs) ;
+	loadCsd();
+
+#ifdef USE_WEBKIT
+	htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
+
+	// add javascript inspector -  open with right click on htmlview
+	htmlView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
+	QWebInspector inspector;
+	inspector.setPage(htmlView->page());
+	inspector.setVisible(true);
+#else
+	htmlView->page()->setWebChannel(&channel);
+	channel.registerObject("csound", &cs) ;
+#endif
+
 
     QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
 }
@@ -41,7 +58,12 @@ void mainWindow::stateChanged(int state)
     QStringList states = QStringList()<< "PLAYING" << "STOPPED"  <<"ERROR";
     qDebug()<<" new state: " << states[state];
     QString command = QString("document.getElementById( \"label\").innerHTML = \"%1\" ").arg(states[state]); // C++ to JavasCript
-    htmlView->page()->runJavaScript(command) ; // access and change the html page via javascript
+#ifdef USE_WEBKIT
+	htmlView->page()->mainFrame()->evaluateJavaScript(command);
+#else
+	htmlView->page()->runJavaScript(command) ; // access and change the html page via javascript
+#endif
+
     // the js page could also handle signals from the attachedd C++ object see http://doc.qt.io/qt-5/qtwebchannel-javascript.html
 }
 
@@ -72,8 +94,8 @@ void mainWindow::loadCsd()  {
     }
     ui->csdTextEdit->document()->setPlainText(csdFile.readAll() );
     ui->csdTextEdit->moveCursor(QTextCursor::Start);
-    //qDebug()<<"HTML text: " << getHtmlText();
-    updateHtml();
+	//qDebug()<<"HTML text: " << getHtmlText();
+	//updateHtml();
 }
 
 QString mainWindow::getHtmlText()
@@ -100,6 +122,7 @@ void mainWindow::updateHtml()
     if (tempHtml.open()) {
         // add necessary lines to load qtwebchannel/qwebchannel.js and qtcsound.js
         // TODO: take care if html includes <head ...something...>
+#ifndef USE_WEBKIT
         QString replaceString = "<head> \
                     <script type=\"text/javascript\" src=\"qrc:///qtwebchannel/qwebchannel.js\"> </script> \
                     <script type=\"text/javascript\" src=\"qrc:///qtcsound.js\"></script> ";
@@ -107,6 +130,7 @@ void mainWindow::updateHtml()
 
         htmlText = htmlText.replace("<head>", replaceString);
         qDebug()<<"Replaced html: " <<htmlText;
+#endif
         tempHtml.write(htmlText.toLocal8Bit());
         tempHtml.close();
         htmlView->setUrl(QUrl::fromLocalFile(tempHtml.fileName()));

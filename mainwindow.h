@@ -3,9 +3,17 @@
 
 #include <QMainWindow>
 
-#include <QtWebEngineWidgets>
-#include <QtWebChannel/QtWebChannel>
-#include <QWebEngineView>
+#ifdef USE_WEBKIT
+	#include <QtWebKit>
+	#include <QWebView>
+	#include <QWebFrame>
+	#include <QWebInspector>
+#else
+	#include <QtWebEngineWidgets>
+	#include <QtWebChannel/QtWebChannel>
+	#include <QWebEngineView>
+#endif
+
 
 #include <QTemporaryFile>
 
@@ -41,9 +49,15 @@ private slots:
 private:
     Ui::mainWindow *ui;
     CsoundWrapper cs; // NB! must be in stack, ie not pointer...
-    QWebChannel channel ;            // Channel for C++ to Javascript comms
-    QWebEngineView * htmlView;
-    QString csd;
+#ifdef USE_WEBKIT
+	QWebView * htmlView;
+#else
+	QWebChannel channel ;            // Channel for C++ to Javascript comms
+	QWebEngineView * htmlView;
+
+#endif
+
+	QString csd;
     QTemporaryFile  tempHtml;
 
 };

@@ -9,6 +9,12 @@ QT       += network webenginewidgets webchannel
 
 CONFIG += c++11 # for R -multiline strings before Qt 5.6
 
+#comment if not QtWEbKit build
+CONFIG += webkit
+DEFINES += USE_WEBKIT
+
+webkit: QT += webkit webkitwidgets
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = csWebengineTest
