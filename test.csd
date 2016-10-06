@@ -24,7 +24,9 @@
    <input type="range" id="slider" oninput='csound.setControlChannel("testChannel",this.value/100.0); '></input><br>
    Get channel from csound with callback: <label id="getchannel"></label> <button onclick='csound.getControlChannel("testChannel", onGetControlChannelCallback)' >Get</button>
    Get channel from csound with promise: <label id="getchannel_promise"></label>
-   <button onclick='getChannelWithPromise()'>Get</button>
+   <button onclick='getChannelWithPromise()'>Get</button><br>
+   <button onclick='alert("TestChannel: "+csound.getControlChannel("testChannel"))'>Get as retrun value</button>
+
    <br>
 	Csound status: <label id="label">x</label><br>
         testChannel (callback):  <label id="testChannel"></label><br>

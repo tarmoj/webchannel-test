@@ -9,6 +9,7 @@
 	function test(){
 		var value = -1;
 		value = csound.getControlChannel("testChannel");
+		// csound.getControlChannel("testChannel", function(){alert("Callback");}) - callback as second parametr in webkit does not work...
 		alert("called "+value);
 	}
 	</script>

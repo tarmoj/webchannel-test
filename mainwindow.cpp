@@ -95,7 +95,7 @@ void mainWindow::loadCsd()  {
     ui->csdTextEdit->document()->setPlainText(csdFile.readAll() );
     ui->csdTextEdit->moveCursor(QTextCursor::Start);
 	//qDebug()<<"HTML text: " << getHtmlText();
-	//updateHtml();
+	updateHtml();
 }
 
 QString mainWindow::getHtmlText()
@@ -118,7 +118,7 @@ void mainWindow::updateHtml()
         qDebug()<< "<html> tag not found";
         return;
     }
-
+	tempHtml.setFileTemplate( QDir::tempPath()+"/csenginetestXXXXXX.html" ); // must have html ending for webkit
     if (tempHtml.open()) {
         // add necessary lines to load qtwebchannel/qwebchannel.js and qtcsound.js
         // TODO: take care if html includes <head ...something...>
