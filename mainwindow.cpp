@@ -30,22 +30,10 @@ mainWindow::mainWindow(QWidget *parent) :
     csd = ":/test.csd";
 	loadCsd();
 
-#ifdef USE_WEBKIT
-	htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
-
-	// add javascript inspector -  open with right click on htmlview
-	htmlView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-
-	QWebInspector inspector;
-	inspector.setPage(htmlView->page());
-	inspector.setVisible(true);
-#else
-	htmlView->page()->setWebChannel(&channel);
-	channel.registerObject("csound", &cs) ;
-#endif
 
 
-    QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
+
+    //QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
 }
 
 mainWindow::~mainWindow()
@@ -96,6 +84,22 @@ void mainWindow::loadCsd()  {
     ui->csdTextEdit->moveCursor(QTextCursor::Start);
 	//qDebug()<<"HTML text: " << getHtmlText();
 	updateHtml();
+    // this was in INIT method first but did not recreate csound object in csound on loading new document
+    // try if this works...
+#ifdef USE_WEBKIT
+    htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
+
+    // add javascript inspector -  open with right click on htmlview
+    htmlView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+
+    QWebInspector inspector;
+    inspector.setPage(htmlView->page());
+    inspector.setVisible(true);
+#else
+    htmlView->page()->setWebChannel(&channel);
+    channel.registerObject("csound", &cs) ;
+#endif
+
 }
 
 QString mainWindow::getHtmlText()
