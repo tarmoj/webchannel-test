@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include "csoundobject.h"
+//#include <csound.h>
 
 
 class CsoundWrapper : public QObject
@@ -64,6 +65,7 @@ signals:
 private:
     CsoundObject * csObject;
     Csound * cs;
+	CSOUND * csound;
 
 };
 

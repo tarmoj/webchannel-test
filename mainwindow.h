@@ -39,7 +39,9 @@ public:
 
 public slots:
     void stateChanged(int state);
-
+#ifdef USE_WEBKIT
+	void addJSObject();
+#endif
 private slots:
     void on_playButton_clicked();
     void on_stopButton_clicked();

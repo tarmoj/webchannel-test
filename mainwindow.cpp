@@ -31,7 +31,10 @@ mainWindow::mainWindow(QWidget *parent) :
 	loadCsd();
 
 #ifdef USE_WEBKIT
-	htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
+	//htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
+
+	QObject::connect(htmlView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),
+						this, SLOT(addJSObject()));  // to enable adding the object after reload
 
 	// add javascript inspector -  open with right click on htmlview
 	htmlView->page()->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
@@ -44,8 +47,7 @@ mainWindow::mainWindow(QWidget *parent) :
 	channel.registerObject("csound", &cs) ;
 #endif
 
-
-    QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
+	//QObject::connect(&cs, SIGNAL(stateChanged(int)), this, SLOT(stateChanged(int)));
 }
 
 mainWindow::~mainWindow()
@@ -64,8 +66,18 @@ void mainWindow::stateChanged(int state)
 	htmlView->page()->runJavaScript(command) ; // access and change the html page via javascript
 #endif
 
-    // the js page could also handle signals from the attachedd C++ object see http://doc.qt.io/qt-5/qtwebchannel-javascript.html
+	// the js page could also handle signals from the attachedd C++ object see http://doc.qt.io/qt-5/qtwebchannel-javascript.html
 }
+
+#ifdef USE_WEBKIT
+void mainWindow::addJSObject()
+{
+	if (htmlView) {
+		qDebug()<<"Adding Csound as javascript object";
+		htmlView->page()->mainFrame()->addToJavaScriptWindowObject("csound", &cs);
+	}
+}
+#endif
 
 void mainWindow::on_playButton_clicked()
 {

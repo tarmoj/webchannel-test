@@ -9,6 +9,7 @@ CsoundWrapper::CsoundWrapper(QObject *parent) : QObject(parent)
 {
     csObject = new CsoundObject();
     cs = csObject->getCsound();
+	csound = cs->GetCsound(); // pointer to C API csound object - closer to CsoundQt usag
     QObject::connect(QApplication::instance(), &QApplication::aboutToQuit, csObject, &CsoundObject::stop);
     QObject::connect(csObject, SIGNAL(statusChanged(int)), this, SIGNAL(stateChanged(int)));
 }
@@ -38,85 +39,80 @@ void CsoundWrapper::stop()
     csObject->stop();
 }
 
-//void CsoundWrapper::readScore(QString score)
-//{
-//    qDebug()<<"CsoundWrapper::readScore New event: "<<score;
-//    cs->ReadScore(score.toLocal8Bit());
-//}
-
-
 int CsoundWrapper::compileCsd(const QString &filename) {
-	return cs->CompileCsd(filename.toLocal8Bit().data());
+	return csoundCompileCsd(csound, filename.toLocal8Bit());
 }
 
 int CsoundWrapper::compileCsdText(const QString &text) {
-	return cs->CompileCsdText(text.toLocal8Bit().data());
+	return csoundCompileCsdText(csound, text.toLocal8Bit());
 }
 
 int CsoundWrapper::compileOrc(const QString &text) {
-	return cs->CompileOrc(text.toLocal8Bit().data());
+	return csoundCompileOrc(csound, text.toLocal8Bit());
 }
 
 double CsoundWrapper::evalCode(const QString &text) {
-	return cs->EvalCode(text.toLocal8Bit().data());
+	return csoundEvalCode(csound, text.toLocal8Bit());
 }
 
 double CsoundWrapper::get0dBFS() {
-	return cs->Get0dBFS();
+	return csoundGet0dBFS(csound); //cs->Get0dBFS();
 }
 
 int CsoundWrapper::getApiVersion() {
-	return cs->GetAPIVersion();
+	return csoundGetAPIVersion();
 }
 
 double CsoundWrapper::getControlChannel(const QString &name) {
-	return cs->GetChannel(name.toLocal8Bit().data());
+	int result = 0;
+	double value = csoundGetControlChannel(csound, name.toLocal8Bit(), &result);
+	return value;
 }
 
 qint64 CsoundWrapper::getCurrentTimeSamples() { // FIXME: unknown type int64_t qint64
-	return cs->GetCurrentTimeSamples();
+	return csoundGetCurrentTimeSamples(csound);
 }
 
 QString CsoundWrapper::getEnv(const QString &name) { // not sure, if it works... test with setGlobalEnv
-	return cs->GetEnv(name.toLocal8Bit());
+	return csoundGetEnv(csound,name.toLocal8Bit());
 }
 
 int CsoundWrapper::getKsmps() {
-	return cs->GetKsmps();
+	return csoundGetKsmps(csound);
 }
 
 int CsoundWrapper::getNchnls() {
-	return cs->GetNchnls();
+	return csoundGetNchnls(csound);
 }
 
 int CsoundWrapper::getNchnlsInput() {
-	return cs->GetNchnlsInput();
+	return csoundGetNchnlsInput(csound);
 }
 
 QString CsoundWrapper::getOutputName() {
-	return cs->GetOutputName();
+	return QString(csoundGetOutputName(csound));
 }
 
 double CsoundWrapper::getScoreOffsetSeconds() {
-	return cs->GetScoreOffsetSeconds();
+	return csoundGetScoreOffsetSeconds(csound);
 }
 
 double CsoundWrapper::getScoreTime() {
-	return cs->GetScoreTime();
+	return csoundGetScoreTime(csound);
 }
 
 int CsoundWrapper::getSr() {
-	return cs->GetSr();
+	return csoundGetSr(csound);
 }
 
 QString CsoundWrapper::getStringChannel(const QString &name) {
 	char buffer[0x100];
-	cs->GetStringChannel(name.toLocal8Bit(), buffer);
-	return buffer;
+	csoundGetStringChannel(csound,name.toLocal8Bit(), buffer);
+	return QString(buffer);
 }
 
 int CsoundWrapper::getVersion() {
-	return cs->GetVersion();
+	return csoundGetVersion();
 }
 
 bool CsoundWrapper::isPlaying() {
@@ -124,75 +120,75 @@ bool CsoundWrapper::isPlaying() {
 }
 
 int CsoundWrapper::isScorePending() {
-	return cs->IsScorePending();
+	return csoundIsScorePending(csound);
 }
 
 void CsoundWrapper::message(const QString &text) {
-	cs->Message(text.toLocal8Bit());
+	csoundMessage(csound, text.toLocal8Bit());
 }
 
 int CsoundWrapper::perform() {
-	return cs->Perform();
+	return csoundPerform(csound);
 }
 
 int CsoundWrapper::readScore(const QString &text) {
-   return cs->ReadScore(text.toLocal8Bit());
+   return csoundReadScore(csound, text.toLocal8Bit());
 }
 
 void CsoundWrapper::rewindScore() {
-	cs->RewindScore();
+	csoundRewindScore(csound);
 }
 
 int CsoundWrapper::runUtility(const QString &command, int argc, char **argv) {
-	return cs->RunUtility(command.toLocal8Bit(), argc, argv);
+	return csoundRunUtility(csound, command.toLocal8Bit(), argc, argv); // probably does not work from JS due char **
 }
 
  int CsoundWrapper::scoreEvent(char type, const double *pFields, long numFields) { // does not work... - unknown type const double *'
-	return cs->ScoreEvent(type, pFields, numFields);
+	return csoundScoreEvent(csound,type, pFields, numFields);
 }
 
  void CsoundWrapper::setControlChannel(const QString &name, double value) {
-	cs->SetChannel(name.toLocal8Bit(), value);
+	csoundSetControlChannel(csound,name.toLocal8Bit(), value);
 }
 
  int CsoundWrapper::setGlobalEnv(const QString &name, const QString &value) {
-	return cs->SetGlobalEnv(name.toLocal8Bit(), value.toLocal8Bit());
+	return csoundSetGlobalEnv(name.toLocal8Bit(), value.toLocal8Bit());
 }
 
  void CsoundWrapper::setInput(const QString &name){
-	cs->SetInput(name.toLocal8Bit().data());
+	csoundSetInput(csound, name.toLocal8Bit());
 }
 
  int CsoundWrapper::setOption(const QString &name){
-	return cs->SetOption((char *)name.toLocal8Bit().data());
+	return csoundSetOption(csound, name.toLocal8Bit());
 }
 
  void CsoundWrapper::setOutput(const QString &name, const QString &type, const QString &format){
-	cs->SetOutput((char *)name.toStdString().c_str(), (char *)type.toStdString().c_str(), (char *)format.toStdString().c_str());
+	csoundSetOutput(csound, name.toLocal8Bit(), type.toLocal8Bit(), format.toLocal8Bit());
 }
 
  void CsoundWrapper::setScoreOffsetSeconds(double value){
-	cs->SetScoreOffsetSeconds(value);
+	csoundSetScoreOffsetSeconds(csound, value);
 }
 
  void CsoundWrapper::setScorePending(bool value){
-	cs->SetScorePending(value);
+	csoundSetScorePending(csound,(int) value);
 }
 
  void CsoundWrapper::setStringChannel(const QString &name, const QString &value){
-	cs->SetChannel(name.toStdString().c_str(), (char *)value.toStdString().c_str());
+	csoundSetStringChannel(csound,  name.toLocal8Bit(), value.toLocal8Bit().data());
 }
 
  double CsoundWrapper::tableGet(int table_number, int index){
-	return cs->TableGet(table_number, index);
+	return csoundTableGet(csound, table_number, index);
 }
 
  int CsoundWrapper::tableLength(int table_number){
-	return cs->TableLength(table_number);
+	return csoundTableLength(csound, table_number);
 }
 
  void CsoundWrapper::tableSet(int table_number, int index, double value){
-	cs->TableSet(table_number, index, value);
+	csoundTableSet(csound, table_number, index, value);
 }
 
 
