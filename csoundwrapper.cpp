@@ -40,7 +40,7 @@ void CsoundWrapper::stop()
 }
 
 int CsoundWrapper::compileCsd(const QString &filename) {
-	return csoundCompileCsd(csound, filename.toLocal8Bit());
+    return csoundCompileCsd(csound, filename.toLocal8Bit().data());
 }
 
 int CsoundWrapper::compileCsdText(const QString &text) {
@@ -156,15 +156,15 @@ int CsoundWrapper::runUtility(const QString &command, int argc, char **argv) {
 }
 
  void CsoundWrapper::setInput(const QString &name){
-	csoundSetInput(csound, name.toLocal8Bit());
+    csoundSetInput(csound, name.toLocal8Bit().data());
 }
 
  int CsoundWrapper::setOption(const QString &name){
-	return csoundSetOption(csound, name.toLocal8Bit());
+    return csoundSetOption(csound, name.toLocal8Bit().data());
 }
 
  void CsoundWrapper::setOutput(const QString &name, const QString &type, const QString &format){
-	csoundSetOutput(csound, name.toLocal8Bit(), type.toLocal8Bit(), format.toLocal8Bit());
+    csoundSetOutput(csound, name.toLocal8Bit().data(), type.toLocal8Bit().data(), format.toLocal8Bit().data()); // csound version problem?
 }
 
  void CsoundWrapper::setScoreOffsetSeconds(double value){
