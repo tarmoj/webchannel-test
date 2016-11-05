@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += network webenginewidgets webchannel
+QT       += network
 
 CONFIG += c++11 # for R -multiline strings before Qt 5.6
 
@@ -13,7 +13,12 @@ CONFIG += c++11 # for R -multiline strings before Qt 5.6
 CONFIG += webkit
 DEFINES += USE_WEBKIT
 
+# for webengine:
+#CONFIG += webengine
+
 webkit: QT += webkit webkitwidgets
+# somehow: else
+webengine: QT += webenginewidgets webchannel
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,12 +28,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    htmlpage.cpp \
     csoundobject.cpp \
     csoundwrapper.cpp
 
 HEADERS  += mainwindow.h \
-    htmlpage.h \
     csoundobject.h \
     csoundwrapper.h
 
